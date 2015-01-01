@@ -1,51 +1,63 @@
-LXC Notes
-=========
+## START, STOP & ATTACH
 
-START, STOP & ATTACH
----------------------
-
-# Create a "p1" container using the "ubuntu" template and the same version of Ubuntu
-# and architecture as the host. Pass "-- --help" to list all available options.
-
+### Create a "p1" container using the "ubuntu" template and the same version of Ubuntu and architecture as the host. 
+```bash
 sudo lxc-create -t ubuntu -n p1
+```
 
-# Start the container (in the background)
+### Start the container (in the background)
+```bash
 sudo lxc-start -n p1 -d
+```
 
-# Enter the container in one of those ways## Attach to the container's console (ctrl-a + q to detach)
+### Enter the container in one of those ways## Attach to the container's console (ctrl-a + q to detach)
+```bash
 sudo lxc-console -n p1
+```
 
-## Spawn bash directly in the container (bypassing the console login), requires a >= 3.8 kernel
+### Spawn bash directly in the container (bypassing the console login), requires a >= 3.8 kernel
+```bash
 sudo lxc-attach -n p1
+```
 
-## SSH into it
+### SSH into it
+```bash
 sudo lxc-info -n p1
 ssh ubuntu@<ip from lxc-info>
+```
 
-# Stop the container in one of those ways
-## Stop it from within
+### Stop the container in one of those ways
+### Stop it from within
+```bash
 sudo poweroff
+```
 
-## Stop it cleanly from the outside
+### Stop it cleanly from the outside
+```bash
 sudo lxc-stop -n p1
+```
 
-## Kill it from the outside
+### Kill it from the outside
+```bash
 sudo lxc-stop -n p1 -k
+```
 
-# List all containers
+### List all containers
+```bash
 stgraber@castiana:~$ sudo lxc-ls -f
 NAME    STATE    IPV4        IPV6                                    AUTOSTART     
 ---------------------------------------------------------------------------------
 p1      RUNNING  10.0.3.128  2607:f2c0:f00f:2751:216:3eff:feb1:4c7f  YES (ubuntu)
 p2      RUNNING  10.0.3.165  2607:f2c0:f00f:2751:216:3eff:fe3a:f1c1  YES
+```
 
-# Freeze a container
+### Freeze a container
+```bash
 sudo lxc-freeze -n <container name>
+```
 
-
-NETWORKING
-----------
-
+## NETWORKING
+```bash
 lxc.network.type = veth
 lxc.network.hwaddr = 00:16:3e:3a:f1:c1
 lxc.network.flags = up
@@ -59,6 +71,7 @@ lxc.network.name = virt0
 lxc.network.type = phys
 lxc.network.link = eth2
 lxc.network.name = eth1
+```
 
 With this setup my container will have 3 interfaces, eth0 will be the usual veth device in the lxcbr0 bridge, eth1 will be the host’s eth2 moved inside the container (it’ll disappear from the host while the container is running) and virt0 will be another veth device in the virbr0 bridge on the host.
 
